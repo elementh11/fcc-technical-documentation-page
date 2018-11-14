@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Technical documentation project</title>
+    <link rel="stylesheet" type="text/css" href="styles.css" media="screen">
+</head>
+
+<body>
+    <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+
+
+    <main id="main-doc">
+        <nav id="navbar">
+            <header>Google Maps JS API</header>
+            <ul>
+                <a class="nav-link" href="#Overview" rel="internal">
+                    <li>Overview</li>
+                </a>
+                <a class="nav-link" href="#Get_API_Key" rel="internal">
+                    <li>Get API Key</li>
+                </a>
+                <a class="nav-link" href="#Map_Types" rel="internal">
+                    <li>Map Types</li>
+                </a>
+                <a class="nav-link" href="#Adding_A_Map" rel="internal">
+                    <li>Adding A Map</li>
+                </a>
+                <a class="nav-link" href="#Map_Coordinates" rel="internal">
+                    <li>Map Coordinates</li>
+                </a>
+                <a class="nav-link" href="#Importing_Data_into_Maps" rel="internal">
+                    <li>Importing Data into Maps</li>
+                </a>
+                <a class="nav-link" href="#Visualizing_Data" rel="internal">
+                    <li>Visualizing Data</li>
+                </a>
+                <a class="nav-link" href="#Geolocation" rel="internal">
+                    <li>Geolocation</li>
+                </a>
+                <a class="nav-link" href="#Heatmaps" rel="internal">
+                    <li>Heatmaps</li>
+                </a>
+                <a class="nav-link" href="#Controls" rel="internal">
+                    <li>Controls</li>
+                </a>
+                <a class="nav-link" href="#Styling_Maps" rel="internal">
+                    <li>Styling Maps</li>
+                </a>
+                <a class="nav-link" href="#Reference" rel="internal">
+                    <li>Reference</li>
+                </a>
+            </ul>
+        </nav>
+
+        <section class="main-section" id="Overview">
+            <header>Overview</header>
+            <article>
+                <p>The Maps JavaScript API lets you customize maps with your own content and imagery for display on web
+                    pages and mobile devices. The Maps JavaScript API features four basic map types (roadmap,
+                    satellite, hybrid, and terrain) which you can modify using layers and styles, controls and events,
+                    and various services and libraries.</p>
+                </artice>
+        </section>
+        <section class="main-section" id="Get_API_Key">
+            <header>Get API Key</header>
+            <article>
+                <p>Follow these steps to get an API key and add restrictions:</p>
+
+                <li>Go to the Google Cloud Platform Console.</li>
+                <li>From the Project drop-down menu, select or create the project for which you want to add an API key.</li>
+                <li>From the Navigation menu, select APIs & Services > Credentials.</li>
+                <li>On the Credentials page, click Create credentials > API key.
+                    The API key created dialog displays your newly created API key.</li>
+                <li>On the dialog, click Restrict Key.</li>
+                <li>On the API key page, under Key restrictions, set the Application restrictions. </li>
+                </artice>
+        </section>
+        <section class="main-section" id="Map_Types">
+            <header>Map Types</header>
+            <article>
+                <p>This document discusses the types of maps you can display using the Maps JavaScript API. The API
+                    uses a MapType object to hold information about these maps. A MapType is an interface that defines
+                    the display and usage of map tiles and the translation of coordinate systems from screen
+                    coordinates to world coordinates (on the map). Each MapType must contain a few methods to handle
+                    retrieval and release of tiles, and properties that define its visual behavior.</p>
+
+                <p>The inner workings of map types within the Maps JavaScript API is an advanced topic. Most developers
+                    can simply use the basic map types noted below. However, you can also modify the presentation of
+                    existing map types using Styled Maps or define your own map tiles using custom map types. When
+                    providing custom map types, you will need to understand how to modify the map's Map Type Registry.</p>
+                <p>There are four types of maps available within the Maps JavaScript API. In addition to the familiar
+                    "painted" road map tiles, the Maps JavaScript API also supports other maps types.</p>
+            </article>
+        </section>
+        <section class="main-section" id="Adding_A_Map">
+            <header>Adding A Map</header>
+            <article>
+                This section shows you how to load the Maps JavaScript API into your web page, and how to write your
+                own JavaScript that uses the API to add a map with a marker on it.
+                <code>
+function initMap() {
+  // The location of Uluru
+  var uluru = {lat: -25.344, lng: 131.036};
+  // The map, centered at Uluru
+  var map = new google.maps.Map(
+      document.getElementById('map'), {zoom: 4, center: uluru});
+  // The marker, positioned at Uluru
+  var marker = new google.maps.Marker({position: uluru, map: map});
+}
+</code>
+
+                Try it yourself!
+            </article>
+        </section>
+        <section class="main-section" id="Map_Coordinates">
+            <header>Map Coordinates</header>
+            <p>
+                Whenever the API needs to translate a location in the world to a location on a map, it first translates
+                latitude and longitude values into a world coordinate. The API uses the Mercator projection to perform
+                this tranlsation.
+            </p>
+            <p>
+                For convenience in the calculation of pixel coordinates (see below) we assume a map at zoom level 0 is
+                a single tile of the base tile size. We then define world coordinates relative to pixel coordinates at
+                zoom level 0, using the projection to convert latitudes and longitudes to pixel positions on this base
+                tile. This world coordinate is a floating point value measured from the origin of the map projection to
+                the specific location. Note that since this value is a floating point value, it may be much more
+                precise than the current resolution of the map image being shown. A world coordinate is independent of
+                the current zoom level, in other words
+            </p>
+            <p>
+                World coordinates in Google Maps are measured from the Mercator projection's origin (the northwest
+                corner of the map at 180 degrees longitude and approximately 85 degrees latitude) and increase in the x
+                direction towards the east (right) and increase in the y direction towards the south (down). Because
+                the basic Mercator Google Maps tile is 256 x 256 pixels, the usable world coordinate space is {0-256},
+                {0-256}.
+            </p>
+
+        </section>
+        <section class="main-section" id="Importing_Data_into_Maps">
+            <header>Importing Data into Maps</header>
+            <article>
+                This section shows you how to load data from either the same domain as your Maps JavaScript API
+                application, or from a different one.
+                <p>
+                    Loading data from the same domain <code>map.data.loadGeoJson('data.json');</code>
+                </p>
+                <p>
+                    Loading data across domains <code>map.data.loadGeoJson('http://www.CORS-ENABLED-SITE.com/data.json');</code>
+                </p>
+                <p>
+                    Requesting JSONP <code> function eqfeed_callback(response) {
+  map.data.addGeoJson(response);
+}</code>
+                </p>
+            </article>
+        </section>
+        <section class="main-section" id="Visualizing_Data">
+            <header>Visualizing Data</header>
+            <article>
+                <p> The code below shows examples of styling the data</p>
+
+                <p>Adds a style to the Data Layer which calls the getCircle() function.
+                    Creates a custom image for the point instead of the default red marker.</p>
+                <code>  map.data.setStyle(function(feature) {
+    var magnitude = feature.getProperty('mag');
+    return {
+      icon: getCircle(magnitude)
+    };
+  });</code>
+                <p>The magnitude property of the earthquake is passed to this function.
+                    getCircle() draws a circle whose size is defined by the magnitude value, and sends that circle back
+                    to be used as the earthquake's custom marker.</p>
+
+                <code>function getCircle(magnitude) {
+      var circle = {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: magnitude
+      };
+      return circle;
+    }</code>
+            </article>
+        </section>
+        <section class="main-section" id="Geolocation">
+            <header>Geolocation</header>
+            <article>
+                <p>Geolocation refers to the identification of the geographic location of a user or computing device
+                    via a variety of data collection mechanisms. Typically, most geolocation services use network
+                    routing addresses or internal GPS devices to determine this location. Geolocation is a
+                    device-specific API. This means that browsers or devices must support geolocation in order to use
+                    it through web applications.</p>
+
+                <p>Applications that want to perform geolocation must support the W3C Geolocation standard. Notice that
+                    the sample code above determines the user's location through the W3C navigator.geolocation property</p>
+            </article>
+        </section>
+        <section class="main-section" id="Heatmaps">
+            <header>Heatmaps</header>
+            <article>
+                <p>Examples below show the code that create heatmaps</p>
+
+                <code>  function eqfeed_callback(results) {
+    var heatmapData = [];
+    for (var i = 0; i &lt; results.features.length; i++) {
+      var coords = results.features[i].geometry.coordinates;
+      var latLng = new google.maps.LatLng(coords[1], coords[0]);
+      heatmapData.push(latLng);
+    }
+    var heatmap = new google.maps.visualization.HeatmapLayer({
+      data: heatmapData,
+      dissipating: false,
+      map: map
+    });
+  }</code>
+                <p>The visualization library is used to display a heatmap.
+                    It contains a HeatmapLayer class.
+                    When using a library, it must be loaded when the Maps API JavaScript is called.</p>
+
+                <p>As with the previous examples, the USGS data is passed to the eqfeed_callback function.
+                    This adds the coordinates of each earthquake to a heatmapData array.
+                    That array is then passed to the HeatmapLayer constructor, which creates the heatmap and displays
+                    it on the map. </p>
+
+                <code>  function eqfeed_callback(results) {
+    var heatmapData = [];
+    for (var i = 0; i &lt; results.features.length; i++) {
+      var coords = results.features[i].geometry.coordinates;
+      var latLng = new google.maps.LatLng(coords[1], coords[0]);
+      var magnitude = results.features[i].properties.mag;
+      var weightedLoc = {
+        location: latLng,
+        weight: Math.pow(2, magnitude)
+      };
+      heatmapData.push(weightedLoc);
+    }
+    var heatmap = new google.maps.visualization.HeatmapLayer({
+      data: heatmapData,
+      dissipating: false,
+      map: map
+    });
+  }</code>
+                To weight the results by magnitude, you can pass WeightedLocation objects to the heatmapData array
+                instead.
+            </article>
+        </section>
+        <section class="main-section" id="Controls">
+            <header>Controls</header>
+            <article>
+                <p>Below is a list of the full set of controls you can use in your maps</p>
+                <ul>
+                    <li>The Zoom control displays "+" and "-" buttons for changing the zoom level of the map. This
+                        control appears by default in the bottom right corner of the map.</li>
+                    <li>The Map Type control is available in a dropdown or horizontal button bar style, allowing the
+                        user to choose a map type (ROADMAP, SATELLITE, HYBRID, or TERRAIN). This control appears by
+                        default in the top left corner of the map.</li>
+                    <li>The Street View control contains a Pegman icon which can be dragged onto the map to enable
+                        Street View. This control appears by default near the bottom right of the map.</li>
+                    <li>The Rotate control provides a combination of tilt and rotate options for maps containing
+                        oblique imagery. This control appears by default near the bottom right of the map. See 45°
+                        imagery for more information.</li>
+                    <li>The Scale control displays a map scale element. This control is disabled by default.</li>
+                    <li>The Fullscreen control offers the option to open the map in fullscreen mode. This control is
+                        enabled by default on desktop and mobile devices.</li>
+                </ul>
+
+            </article>
+        </section>
+        <section class="main-section" id="Styling_Maps">
+            <header>Styling Maps</header>
+            <article>
+                <p>Stylers are formatting options that you can apply to map features and elements.</P>
+
+                <code>"stylers": [
+  { "color": "#99FF33" }
+]</code>
+                <p>This snippet removes all intensity from the color of a feature, regardless of its starting color.
+                    The effect is to render the feature grayscale.
+                </p>
+                <code>"stylers": [
+  { "saturation": -100 }
+]</code>
+            </article>
+        </section>
+        <section class="main-section" id="Reference">
+            <header>Reference</header>
+            <article>
+                <li>All the documentation in this page is taken from <a href="https://developers.google.com/maps/documentation/javascript/"
+                        target="_blank">Maps Javascript API</a>
+            </article>
+        </section>
+    </main>
+</body>
+
+</html>
